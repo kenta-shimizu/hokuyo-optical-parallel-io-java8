@@ -1,5 +1,8 @@
-*.sh
-*.bat
+# MacOS
+*.DS_Store
+
+# sh
+gitauto.sh
 
 # Compiled class file
 *.class
