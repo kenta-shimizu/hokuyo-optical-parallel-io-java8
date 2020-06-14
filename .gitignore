@@ -1,3 +1,6 @@
+*.sh
+*.bat
+
 # Compiled class file
 *.class
 
