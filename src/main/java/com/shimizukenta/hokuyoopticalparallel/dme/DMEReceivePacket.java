@@ -4,9 +4,7 @@ import java.io.Serializable;
 import java.net.SocketAddress;
 import java.util.Arrays;
 
-import com.shimizukenta.hokuyoopticalparallel.ReceiveData;
-
-public final class DMEReceivePacket implements ReceiveData, Serializable {
+public final class DMEReceivePacket implements Serializable {
 	
 	private static final long serialVersionUID = -3804889113227041914L;
 	
@@ -26,7 +24,6 @@ public final class DMEReceivePacket implements ReceiveData, Serializable {
 		this.toStringProxy = null;
 	}
 	
-	@Override
 	public byte[] getBytes() {
 		return Arrays.copyOf(bs, bs.length);
 	}
@@ -37,7 +34,7 @@ public final class DMEReceivePacket implements ReceiveData, Serializable {
 	
 	private static final byte empty = (byte)0x0;
 	
-	private static final int DataSize = 4;
+	public static final int DataSize = 4;
 	
 	public boolean isCorrect() {
 		return bs.length == DataSize;
@@ -97,6 +94,38 @@ public final class DMEReceivePacket implements ReceiveData, Serializable {
 		}
 	}
 	
+	public boolean isHigh(DMEOutput output) {
+		return outputData().isHigh(output);
+	}
+	
+	public boolean isLow(DMEOutput output) {
+		return outputData().isLow(output);
+	}
+	
+	/**
+	 * alias of #isHigh
+	 * 
+	 * @param output
+	 * @return same #isHigh
+	 */
+	public boolean isOn(DMEOutput output) {
+		return outputData().isOn(output);
+	}
+	
+	/**
+	 * alias of #isLow
+	 * 
+	 * @param output
+	 * @return same #isLow
+	 */
+	public boolean isOff(DMEOutput output) {
+		return outputData().isOff(output);
+	}
+	
+	public boolean isMode(DMEMode mode) {
+		return modeData().isMode(mode);
+	}
+	
 	@Override
 	public String toString() {
 		synchronized ( this ) {
@@ -105,7 +134,7 @@ public final class DMEReceivePacket implements ReceiveData, Serializable {
 				
 				sb.append(isR() ? "R" : "?")
 				.append(" ")
-				.append(String.format("%03d", ((int)(id()) & 0xFF)))
+				.append(String.format("%02X", id()))
 				.append(" ")
 				.append(outputData().toString())
 				.append(" ")

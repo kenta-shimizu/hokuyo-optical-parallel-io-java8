@@ -146,23 +146,25 @@ public final class DME extends AbstractHokuyoOpticalParallel<DMEReceivePacket, B
 	}
 	
 	private void changeCommunicateState() {
-		synchronized ( this ) {
-			boolean f = ! this.channels.isEmpty();
-			if ( f != this.lastCommunicateState ) {
-				this.lastCommunicateState = f;
-				putCommunicateStateChanged(f);
-			}
+		boolean f = ! this.channels.isEmpty();
+		if ( f != this.lastCommunicateState ) {
+			this.lastCommunicateState = f;
+			putCommunicateStateChanged(f);
 		}
 	}
 	
 	private void addChannel(DatagramChannel channel) {
-		this.channels.add(channel);
-		changeCommunicateState();
+		synchronized ( this ) {
+			this.channels.add(channel);
+			changeCommunicateState();
+		}
 	}
 	
 	private void clearChannel() {
-		this.channels.clear();
-		changeCommunicateState();
+		synchronized ( this ) {
+			this.channels.clear();
+			changeCommunicateState();
+		}
 	}
 	
 	private static interface InterruptableRunnable {
@@ -216,7 +218,6 @@ public final class DME extends AbstractHokuyoOpticalParallel<DMEReceivePacket, B
 								return null;
 							});
 					
-					
 					try {
 						putOpenedLog(localAddrString);
 						execServ.invokeAny(tasks);
@@ -269,7 +270,7 @@ public final class DME extends AbstractHokuyoOpticalParallel<DMEReceivePacket, B
 						buffer.get(bs);
 						
 						for ( Inner i : inners ) {
-							i.put(remote, bs);
+							i.put(bs, remote);
 						}
 					}
 				}
@@ -290,36 +291,41 @@ public final class DME extends AbstractHokuyoOpticalParallel<DMEReceivePacket, B
 	
 	private class Inner {
 		
-		private final SocketAddress ref;
-		private final ByteBuffer buffer = ByteBuffer.allocate(256);
+		private final ByteBuffer buffer = ByteBuffer.allocate(DMEReceivePacket.DataSize);
+		private final SocketAddress refAddr;
 		
 		private Inner(SocketAddress remote) {
-			this.ref = remote;
+			this.refAddr = remote;
 		}
 		
-		public void put(SocketAddress remote, byte[] bs) throws InterruptedException {
+		private void put(byte[] bs, SocketAddress remote) throws InterruptedException {
 			
-			if ( remote != null && ref.equals(remote) ) {
+			if ( remote != null && refAddr.equals(remote) ) {
 				
 				for ( byte b : bs ) {
 					
-					if ( b == LF ) {
+					if ( buffer.hasRemaining() ) {
 						
-						((Buffer)buffer).flip();
-						
-						byte[] bb = new byte[buffer.remaining()];
-						buffer.get(bb);
-						
-						((Buffer)buffer).clear();
-						
-						DMEReceivePacket p = new DMEReceivePacket(bs, ref);
-						recvPacketQueue.put(p);
-						putReceivedLog(p);
+						buffer.put(b);
 						
 					} else {
 						
-						if ( buffer.hasRemaining() ) {
-							buffer.put(b);
+						if (b == LF) {
+							
+							((Buffer)buffer).flip();
+							
+							byte[] bb = new byte[buffer.remaining()];
+							buffer.get(bb);
+							
+							((Buffer)buffer).clear();
+							
+							DMEReceivePacket p = new DMEReceivePacket(bb, remote);
+							
+							if ( p.isR() ) {
+								recvPacketQueue.put(p);
+							}
+							
+							putReceivedLog(p);
 						}
 					}
 				}
@@ -349,6 +355,8 @@ public final class DME extends AbstractHokuyoOpticalParallel<DMEReceivePacket, B
 			catch ( IOException e ) {
 				putIOLog(e);
 			}
+			
+			TimeUnit.MILLISECONDS.sleep(20L);
 		});
 	}
 	
@@ -377,6 +385,7 @@ public final class DME extends AbstractHokuyoOpticalParallel<DMEReceivePacket, B
 	public void send(DMEMode... modes) throws InterruptedException {
 		send(DMEModePacket.from(modes));
 	}
+	
 	
 	private void putOpenedLog(Object value) {
 		putIOLog(new IOLog("opened", value));

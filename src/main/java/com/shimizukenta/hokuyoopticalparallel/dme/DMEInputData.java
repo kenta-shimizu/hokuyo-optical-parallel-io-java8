@@ -22,7 +22,7 @@ public final class DMEInputData implements Serializable {
 		}
 	}
 	
-	private boolean high(int shift) {
+	private boolean isHigh(int shift) {
 		synchronized ( this ) {
 			byte b = (byte)0x1;
 			b <<= shift;
@@ -30,9 +30,9 @@ public final class DMEInputData implements Serializable {
 		}
 	}
 	
-	public boolean is(DMEInput input) {
+	public boolean isInput(DMEInput input) {
 		synchronized ( this ) {
-			return high(input.shift()) == input.high();
+			return isHigh(input.shift()) == input.high();
 		}
 	}
 	
@@ -42,7 +42,7 @@ public final class DMEInputData implements Serializable {
 			StringBuilder sb = new StringBuilder();
 			for ( int i = 8; i > 0; ) {
 				--i;
-				sb.append(high(i) ? "1" : "0");
+				sb.append(isHigh(i) ? "1" : "0");
 			}
 			return sb.toString();
 		}

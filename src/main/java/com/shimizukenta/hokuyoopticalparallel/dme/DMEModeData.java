@@ -20,7 +20,7 @@ public class DMEModeData implements Serializable {
 		return mode;
 	}
 	
-	private boolean high(int shift) {
+	private boolean isHigh(int shift) {
 		synchronized ( this ) {
 			byte b = (byte)0x1;
 			b <<= shift;
@@ -28,9 +28,9 @@ public class DMEModeData implements Serializable {
 		}
 	}
 	
-	public boolean is(DMEMode mode) {
+	public boolean isMode(DMEMode mode) {
 		synchronized ( this ) {
-			return high(mode.shift()) == mode.high();
+			return isHigh(mode.shift()) == mode.high();
 		}
 	}
 	
@@ -40,7 +40,7 @@ public class DMEModeData implements Serializable {
 			StringBuilder sb = new StringBuilder();
 			for ( int i = 8; i > 0; ) {
 				--i;
-				sb.append(high(i) ? "1" : "0");
+				sb.append(isHigh(i) ? "1" : "0");
 			}
 			return sb.toString();
 		}

@@ -3,20 +3,20 @@ package com.shimizukenta.hokuyoopticalparallel;
 import java.util.Collection;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public abstract class AbstractHokuyoOpticalParallel<T extends ReceiveData, U> implements HokuyoOpticalParallel<T, U> {
+public abstract class AbstractHokuyoOpticalParallel<T, U> implements HokuyoOpticalParallel<T, U> {
 
 	public AbstractHokuyoOpticalParallel() {
 	}
 	
-	private final Collection<ReceiveDataListener<T>> receiveDataListeners = new CopyOnWriteArrayList<>();
+	private final Collection<ReceiveListener<T>> receiveDataListeners = new CopyOnWriteArrayList<>();
 	
 	@Override
-	public boolean addReceiveDataListener(ReceiveDataListener<T> l) {
+	public boolean addReceiveListener(ReceiveListener<T> l) {
 		return receiveDataListeners.add(l);
 	}
 	
 	@Override
-	public boolean removeReceiveDataListener(ReceiveDataListener<T> l) {
+	public boolean removeReceiveListener(ReceiveListener<T> l) {
 		return receiveDataListeners.remove(l);
 	}
 	

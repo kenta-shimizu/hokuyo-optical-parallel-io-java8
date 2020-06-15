@@ -19,26 +19,38 @@ public class DMEOutputData implements Serializable {
 		return this.output;
 	}
 	
-	private boolean high(int shift) {
+	private boolean isHigh(int shift) {
 		byte b = (byte)0x1;
 		b <<= shift;
 		return (this.output & b) != 0x0;
 	}
 	
-	public boolean high(DMEOutput output) {
-		return high(output.shift());
+	public boolean isHigh(DMEOutput output) {
+		return isHigh(output.shift());
 	}
 	
-	public boolean low(DMEOutput output) {
-		return ! high(output);
+	public boolean isLow(DMEOutput output) {
+		return ! isHigh(output);
 	}
 	
-	public boolean on(DMEOutput output) {
-		return high(output);
+	/**
+	 * alias of #isHigh
+	 * 
+	 * @param output
+	 * @return same #isHigh
+	 */
+	public boolean isOn(DMEOutput output) {
+		return isHigh(output);
 	}
 	
-	public boolean off(DMEOutput output) {
-		return low(output);
+	/**
+	 * alias of #isLow
+	 * 
+	 * @param output
+	 * @return same #isLow
+	 */
+	public boolean isOff(DMEOutput output) {
+		return isLow(output);
 	}
 	
 	@Override
@@ -48,7 +60,7 @@ public class DMEOutputData implements Serializable {
 				StringBuilder sb = new StringBuilder();
 				for (int i = 8; i > 0;) {
 					--i;
-					sb.append(high(i) ? "1" : "0");
+					sb.append(isHigh(i) ? "1" : "0");
 				}
 				this.toStringProxy = sb.toString();
 			}

@@ -21,7 +21,7 @@ public class DMESendPacket implements Serializable {
 		return this.bs;
 	}
 	
-	private boolean high(int shift) {
+	private boolean isHigh(int shift) {
 		synchronized ( this ) {
 			byte b = (byte)0x1;
 			b <<= shift;
@@ -37,7 +37,7 @@ public class DMESendPacket implements Serializable {
 				sb.append("S ");
 				for ( int i = 8; i > 0; ) {
 					--i;
-					sb.append(high(i) ? "1" : "0");
+					sb.append(isHigh(i) ? "1" : "0");
 				}
 				this.toStringProxy = sb.toString();
 			}
