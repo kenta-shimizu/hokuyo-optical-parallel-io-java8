@@ -7,6 +7,18 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
+/**
+ * This class is Log, includes subuect, timestamp, detail-information.
+ * 
+ * <p>
+ * To get subject, {@link #subject()}.<br />
+ * To get timestamp, {@link #timestamp()}.<br />
+ * To get detail-information, {@link #value()}.<br />
+ * </p>
+ * 
+ * @author kenta-shimizu
+ *
+ */
 public class IOLog {
 
 	protected static final String BR = System.lineSeparator();
@@ -40,14 +52,29 @@ public class IOLog {
 		this("Throwable", LocalDateTime.now(), t);
 	}
 	
+	/**
+	 * Return subject.
+	 * 
+	 * @return subject-string
+	 */
 	public String subject() {
 		return this.subject;
 	}
 	
+	/**
+	 * Returns timestamp.
+	 * 
+	 * @return timestamp-LocalDateTime
+	 */
 	public LocalDateTime timestamp() {
 		return this.timestamp;
 	}
 	
+	/**
+	 * Returns detail-information.
+	 * 
+	 * @return valur if exist, and {@code Optional.empty()} otherwise
+	 */
 	public Optional<Object> value() {
 		return value == null ? Optional.empty() : Optional.of(value);
 	}

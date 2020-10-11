@@ -21,18 +21,18 @@ public abstract class AbstractHokuyoOpticalParallel<T, U> implements HokuyoOptic
 	}
 	
 	protected void putReceiveData(T data) {
-		receiveDataListeners.forEach(l -> {l.receive(data);});
+		receiveDataListeners.forEach(l -> {l.received(data);});
 	}
 	
-	private final Collection<CommunicateStateChangedListener<U>> communicateStateChangedListeners = new CopyOnWriteArrayList<>();
+	private final Collection<CommunicateStateChangeListener<U>> communicateStateChangedListeners = new CopyOnWriteArrayList<>();
 	
 	@Override
-	public boolean addCommunicateStateChangedListener(CommunicateStateChangedListener<U> l) {
+	public boolean addCommunicateStateChangeListener(CommunicateStateChangeListener<U> l) {
 		return communicateStateChangedListeners.add(l);
 	}
 	
 	@Override
-	public boolean removeCommunicateStateChangedListener(CommunicateStateChangedListener<U> l) {
+	public boolean removeCommunicateStateChangeListener(CommunicateStateChangeListener<U> l) {
 		return communicateStateChangedListeners.remove(l);
 	}
 	
@@ -53,7 +53,7 @@ public abstract class AbstractHokuyoOpticalParallel<T, U> implements HokuyoOptic
 	}
 	
 	protected void putIOLog(IOLog log) {
-		ioLogListeners.forEach(l -> {l.recieve(log);});
+		ioLogListeners.forEach(l -> {l.received(log);});
 	}
 	
 	protected void putIOLog(Throwable t) {

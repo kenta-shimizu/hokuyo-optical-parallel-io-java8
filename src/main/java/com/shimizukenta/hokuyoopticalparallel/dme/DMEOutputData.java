@@ -2,6 +2,12 @@ package com.shimizukenta.hokuyoopticalparallel.dme;
 
 import java.io.Serializable;
 
+/**
+ * This class is DMEOutputData.
+ * 
+ * @author kenta-shimizu
+ *
+ */
 public class DMEOutputData implements Serializable {
 	
 	private static final long serialVersionUID = -5830636600096369683L;
@@ -15,6 +21,11 @@ public class DMEOutputData implements Serializable {
 		this.toStringProxy = null;
 	}
 	
+	/**
+	 * Returns output byte.
+	 * 
+	 * @return output byte
+	 */
 	public byte get() {
 		return this.output;
 	}
@@ -25,29 +36,41 @@ public class DMEOutputData implements Serializable {
 		return (this.output & b) != 0x0;
 	}
 	
+	/**
+	 * Returns is bit high.
+	 * 
+	 * @param output
+	 * @return {@code true} is high
+	 */
 	public boolean isHigh(DMEOutput output) {
 		return isHigh(output.shift());
 	}
 	
+	/**
+	 * Returns is bit low.
+	 * 
+	 * @param output
+	 * @return {@code true} is low
+	 */
 	public boolean isLow(DMEOutput output) {
 		return ! isHigh(output);
 	}
 	
 	/**
-	 * alias of #isHigh
+	 * Equivalent to isHigh
 	 * 
 	 * @param output
-	 * @return same #isHigh
+	 * @return Equivalent to isHigh
 	 */
 	public boolean isOn(DMEOutput output) {
 		return isHigh(output);
 	}
 	
 	/**
-	 * alias of #isLow
+	 * Equivalent to isLow
 	 * 
 	 * @param output
-	 * @return same #isLow
+	 * @return Equivalent to isLow
 	 */
 	public boolean isOff(DMEOutput output) {
 		return isLow(output);

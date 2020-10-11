@@ -2,6 +2,12 @@ package com.shimizukenta.hokuyoopticalparallel.dme;
 
 import java.io.Serializable;
 
+/**
+ * This class is Mode Data.
+ * 
+ * @author kenta-shimizu
+ *
+ */
 public class DMEModeData implements Serializable {
 
 	private static final long serialVersionUID = 1349926879655591769L;
@@ -16,6 +22,11 @@ public class DMEModeData implements Serializable {
 		this((byte)0x0);
 	}
 	
+	/**
+	 * Returns  mode byte.
+	 * 
+	 * @return mode byte
+	 */
 	public byte get() {
 		return mode;
 	}
@@ -28,6 +39,12 @@ public class DMEModeData implements Serializable {
 		}
 	}
 	
+	/**
+	 * Returns bit is high.
+	 * 
+	 * @param mode
+	 * @return {@code true} if bit is high
+	 */
 	public boolean isMode(DMEMode mode) {
 		synchronized ( this ) {
 			return isHigh(mode.shift()) == mode.high();
@@ -46,12 +63,22 @@ public class DMEModeData implements Serializable {
 		}
 	}
 	
+	/**
+	 * mode Setter
+	 * 
+	 * @param mode
+	 */
 	public void set(byte mode) {
 		synchronized ( this ) {
 			this.mode = mode;
 		}
 	}
 	
+	/**
+	 * modes Setter.
+	 * 
+	 * @param modes
+	 */
 	public void set(DMEMode... modes) {
 		
 		synchronized ( this ) {
@@ -77,14 +104,31 @@ public class DMEModeData implements Serializable {
 		}
 	}
 	
+	/**
+	 * Returns new instance.
+	 * 
+	 * @return DMEModeData instance
+	 */
 	public static DMEModeData initial() {
 		return new DMEModeData();
 	}
 	
+	/**
+	 * Returns new instance from byte.
+	 * 
+	 * @param mode
+	 * @return DMEModeData instance
+	 */
 	public static DMEModeData from(byte mode) {
 		return new DMEModeData(mode);
 	}
 	
+	/**
+	 * Returns new instance from modes.
+	 * 
+	 * @param modes
+	 * @return DMEModeData instance.
+	 */
 	public static DMEModeData from(DMEMode... modes) {
 		DMEModeData m = initial();
 		m.set(modes);

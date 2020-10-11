@@ -225,7 +225,7 @@ public class DMETestStab implements Closeable {
 //					echo("GO_OFF : " + r.isMode(DMEMode.GO_OFF));
 				});
 				
-				pc.addCommunicateStateChangedListener(f -> {
+				pc.addCommunicateStateChangeListener(f -> {
 					
 					if ( f ) {
 						

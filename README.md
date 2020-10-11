@@ -11,7 +11,7 @@ HOKUYO DME-G/H is able to read and write 8-bit-parallel-IO-data by UDP/IP.
 
 ## Create new instance and open
 
-```
+```java
 DMEConfig config = new DMEConfig();
 config.bindSocketAddress(new InetSocketAddress("192.168.0.10", 0));
 config.addConnect(new InetSocketAddress("192.168.0.1", 10940));
@@ -21,7 +21,7 @@ DME dme = DME.open(config);
 
 ## Add Listener for Receive-packet
 
-```
+```java
 dme.addReceiveListener((DMEReceivePacket r) -> {
 
     boolean output1_on = r.isOn(DMEOutput.Output1);
@@ -40,7 +40,7 @@ dme.addReceiveListener((DMEReceivePacket r) -> {
 
 ## Send Mode-packet
 
-```
+```java
 dme.send(
     DMEMode.MODE_OFF,   /* or DMEMode.MODE_ON   */
     DMEMode.SELECT_OFF  /* or DMEMode.SELECT_ON */
@@ -49,7 +49,7 @@ dme.send(
 
 ## Send Send-packet
 
-```
+```java
 dme.send(
     DMEInput.Input1_OFF, /* or DMEInput.Input1_ON */
     DMEInput.Input2_OFF, /* or DMEInput.Input2_ON */

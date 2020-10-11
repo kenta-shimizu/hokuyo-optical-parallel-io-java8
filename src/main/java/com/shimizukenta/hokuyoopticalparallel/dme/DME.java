@@ -20,9 +20,15 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import com.shimizukenta.hokuyoopticalparallel.AbstractHokuyoOpticalParallel;
-import com.shimizukenta.hokuyoopticalparallel.CommunicateStateChangedListener;
+import com.shimizukenta.hokuyoopticalparallel.CommunicateStateChangeListener;
 import com.shimizukenta.hokuyoopticalparallel.IOLog;
 
+/**
+ * This class is implements DME-Communicating, open/close, send/receive.
+ * 
+ * @author kenta-shimizu
+ *
+ */
 public final class DME extends AbstractHokuyoOpticalParallel<DMEReceivePacket, Boolean> {
 	
 	private final ExecutorService execServ = Executors.newCachedThreadPool(r -> {
@@ -47,6 +53,13 @@ public final class DME extends AbstractHokuyoOpticalParallel<DMEReceivePacket, B
 		this.lastCommunicateState = false;
 	}
 	
+	/**
+	 * Create new instance and open.
+	 * 
+	 * @param config
+	 * @return DME instance
+	 * @throws IOException
+	 */
 	public static DME open(DMEConfig config) throws IOException {
 		
 		final DME inst = new DME(config);
@@ -138,10 +151,10 @@ public final class DME extends AbstractHokuyoOpticalParallel<DMEReceivePacket, B
 	}
 	
 	@Override
-	public boolean addCommunicateStateChangedListener(CommunicateStateChangedListener<Boolean> l) {
+	public boolean addCommunicateStateChangeListener(CommunicateStateChangeListener<Boolean> l) {
 		synchronized ( this ) {
 			l.changed(this.lastCommunicateState);
-			return super.addCommunicateStateChangedListener(l);
+			return super.addCommunicateStateChangeListener(l);
 		}
 	}
 	
@@ -360,28 +373,64 @@ public final class DME extends AbstractHokuyoOpticalParallel<DMEReceivePacket, B
 		});
 	}
 	
+	/**
+	 * Send Input Data.
+	 * 
+	 * @param packet
+	 * @throws InterruptedException
+	 */
 	public void send(DMESendPacket packet) throws InterruptedException {
 		putTrySendLog(packet);
 		writeBytesQueue.put(packet.getBytes());
 	}
 	
+	/**
+	 * Send Input Data.
+	 * 
+	 * @param input
+	 * @throws InterruptedException
+	 */
 	public void send(DMEInputData input) throws InterruptedException {
 		send(DMESendPacket.from(input));
 	}
 	
+	/**
+	 * Send Input Data.
+	 * 
+	 * @param inputs
+	 * @throws InterruptedException
+	 */
 	public void send(DMEInput... inputs) throws InterruptedException {
 		send(DMESendPacket.from(inputs));
 	}
 	
+	/**
+	 * Send Mode Data.
+	 * 
+	 * @param packet
+	 * @throws InterruptedException
+	 */
 	public void send(DMEModePacket packet) throws InterruptedException {
 		putTrySendLog(packet);
 		writeBytesQueue.put(packet.getBytes());
 	}
 	
+	/**
+	 * Send Mode Data.
+	 * 
+	 * @param mode
+	 * @throws InterruptedException
+	 */
 	public void send(DMEModeData mode) throws InterruptedException {
 		send(DMEModePacket.from(mode));
 	}
 	
+	/**
+	 * Send Mode Data.
+	 * 
+	 * @param modes
+	 * @throws InterruptedException
+	 */
 	public void send(DMEMode... modes) throws InterruptedException {
 		send(DMEModePacket.from(modes));
 	}
